@@ -2,8 +2,15 @@
 #define PERSWIFIMANAGER_H
 
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
-#include <DNSServer.h>
+#include <FS.h>
+#include <Hash.h>
+#include <ESPAsyncTCP.h>           //https://github.com/me-no-dev/ESPAsyncTCP
+#include <ESPAsyncWebServer.h>     //https://github.com/me-no-dev/ESPAsyncWebServer
+#include <ESPAsyncDNSServer.h>     //https://github.com/devyte/ESPAsyncDNSServer
+//                                 //https://github.com/me-no-dev/ESPAsyncUDP
+#include <SPIFFSEditor.h>
+
+#define WIFI_HTM_PROGMEM
 
 #define WIFI_CONNECT_TIMEOUT 30
 
@@ -13,7 +20,7 @@ class PersWiFiManager {
 
     typedef std::function<void(void)> WiFiChangeHandlerFunction;
 
-    PersWiFiManager(ESP8266WebServer& s, DNSServer& d);
+    PersWiFiManager(AsyncWebServer& s, AsyncDNSServer& d);
 
     bool attemptConnection(const String& ssid = "", const String& pass = "");
 
@@ -24,6 +31,8 @@ class PersWiFiManager {
     String getApSsid();
 
     void setApCredentials(const String& apSsid, const String& apPass = "");
+
+    void setFSCredentials(const String& http_user = "admin", const String& http_pass = "password");
 
     void setConnectNonBlock(bool b);
 
@@ -36,9 +45,10 @@ class PersWiFiManager {
     void onAp(WiFiChangeHandlerFunction fn);
 
   private:
-    ESP8266WebServer * _server;
-    DNSServer * _dnsServer;
+    AsyncWebServer * _aserver;
+    AsyncDNSServer * _adnsServer;
     String _apSsid, _apPass;
+    String _fsUser = "admin", _fsPass = "password";
 
     bool _connectNonBlock;
     unsigned long _connectStartTime;
