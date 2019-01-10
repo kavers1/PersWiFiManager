@@ -1,14 +1,5 @@
-#define DEBUG_SERIAL //uncomment for Serial debugging statements
-
-#ifdef DEBUG_SERIAL
-#define DEBUG_BEGIN Serial.begin(115200)
-#define DEBUG_PRINT(x) Serial.println(x)
-#else
-#define DEBUG_PRINT(x) 
-#define DEBUG_BEGIN
-#endif
-
 //includes
+#include <FS.h>
 #include <ArduinoJson.h>
 #include <PersWiFiManager.h>      //https://github.com/debsahu/PersWiFiManager
 //                                //https://github.com/me-no-dev/ESPAsyncTCP
@@ -29,28 +20,43 @@ int x;
 String y;
 
 void setup() {
-  DEBUG_BEGIN; //for terminal debugging
-  DEBUG_PRINT();
+  Serial.begin(115200); //for terminal debugging
+  Serial.println();
 
-  //allows serving of files from SPIFFS
-  SPIFFS.begin();
   //sets network name for AP mode
   persWM.setApCredentials(DEVICE_NAME);
   //persWM.setApCredentials(DEVICE_NAME, "password"); optional password
-  
+
+  persWM.onConnect([]() {
+    if (Serial) { 
+      Serial.print("Router IP: ");
+      Serial.println(WiFi.localIP());
+    }
+  });
+  persWM.onAp([](){
+    if (Serial) { 
+    Serial.print("AP Mode, IP: ");
+    Serial.println(persWM.getApSsid());
+    }
+  });
+
+  //make connecting/disconnecting non-blocking
+  persWM.setConnectNonBlock(true);
+
   persWM.setFSCredentials("admin","password"); //SPIFFs: http://<IP>/edit
   persWM.begin();
+  //SPIFFS.format();
 
   //handles commands from webpage, sends live data in JSON format
   server.on("/api", HTTP_GET, [](AsyncWebServerRequest *request) {
-    DEBUG_PRINT("server.on /api");
+    Serial.println("server.on /api");
     if (request->hasArg("x")) {
       x = request->arg("x").toInt();
-      DEBUG_PRINT(String("x: ")+x);
+      Serial.println(String("x: ")+x);
     } //if
     if (request->hasArg("y")) {
       y = request->arg("y");
-      DEBUG_PRINT("y: "+y);
+      Serial.println("y: "+y);
     } //if
 
     //build json object of program data
@@ -66,11 +72,12 @@ void setup() {
   }); //server.on api
 
   server.begin();
-  DEBUG_PRINT("setup complete.");
+  Serial.println("----------------------\nsetup complete.");
 } //void setup
 
 void loop() {
-
+  //in non-blocking mode, handleWiFi must be called in the main loop
+  persWM.handleWiFi();
   // do stuff with x and y
 
 } //void loop
