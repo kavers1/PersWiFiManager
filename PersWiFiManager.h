@@ -7,10 +7,11 @@
 #include <ESPAsyncTCP.h>       //https://github.com/me-no-dev/ESPAsyncTCP
 #include <ESPAsyncWebServer.h> //https://github.com/me-no-dev/ESPAsyncWebServer
 #include <ESPAsyncDNSServer.h> //https://github.com/devyte/ESPAsyncDNSServer
-//                                 //https://github.com/me-no-dev/ESPAsyncUDP
+//                             //https://github.com/me-no-dev/ESPAsyncUDP
 #include <SPIFFSEditor.h>
 
-#define WIFI_HTM_PROGMEM
+//#define WIFI_HTM_PROGMEM
+#define WIFI_HTM_GZ_PROGMEM
 
 #define WIFI_CONNECT_TIMEOUT 30
 
@@ -20,7 +21,7 @@ class PersWiFiManager
 public:
   typedef std::function<void(void)> WiFiChangeHandlerFunction;
 
-  PersWiFiManager(AsyncWebServer &s, AsyncDNSServer &d);
+  PersWiFiManager(AsyncWebServer &s, AsyncDNSServer &d, const fs::FS& fs = SPIFFS);
 
   bool attemptConnection(const String &ssid = "", const String &pass = "");
 
@@ -45,6 +46,7 @@ public:
   void onAp(WiFiChangeHandlerFunction fn);
 
 private:
+  fs::FS _fs;
   AsyncWebServer *_aserver;
   AsyncDNSServer *_adnsServer;
   String _apSsid, _apPass;
