@@ -5,7 +5,7 @@ Persistent WiFiManager Arduino library for ESP8266-based microcontrollers
 - Uses tickers, upgrade ardiono-esp8266 core to v **2.5.0-beta2 or greater**
 - SPIFFS editor http://<IP_Address>/edit
 - `persWM.setFSCredentials("admin","passsword");` // used for SPIFFS editor credentials
-- `persWM.setConnectNonBlock(true);` is oboselte, non-blocking is done in this code
+- `persWM.setConnectNonBlock(true);` is obsolete, non-blocking is done in this code
 
 ## Libraries needed
 |Library               |Link                                           |Purpose      |
