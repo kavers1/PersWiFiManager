@@ -9,6 +9,8 @@
 #include <ESPAsyncDNSServer.h> //https://github.com/devyte/ESPAsyncDNSServer
 //                             //https://github.com/me-no-dev/ESPAsyncUDP
 #include <SPIFFSEditor.h>
+#include <Arduino.h>
+#include <Ticker.h>
 
 //#define WIFI_HTM_PROGMEM
 #define WIFI_HTM_GZ_PROGMEM
@@ -46,6 +48,8 @@ public:
   void onAp(WiFiChangeHandlerFunction fn);
 
 private:
+
+  Ticker _tkWiFiH;
   fs::FS _fs;
   AsyncWebServer *_aserver;
   AsyncDNSServer *_adnsServer;

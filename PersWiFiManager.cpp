@@ -131,15 +131,10 @@ bool PersWiFiManager::attemptConnection(const String &ssid, const String &pass)
     WiFi.begin();
   }
 
-  //if in nonblock mode, skip this loop
   _connectStartTime = millis();
-  do
-  {
-    handleWiFi();
-    yield();
-  }
-  while (!_connectNonBlock && _connectStartTime);
-
+  
+  _tkWiFiH.attach_ms(10, std::bind(&PersWiFiManager::handleWiFi, this));
+  
   return (WiFi.status() == WL_CONNECTED);
 
 } //attemptConnection
@@ -188,6 +183,7 @@ void PersWiFiManager::startApMode()
 
 void PersWiFiManager::setConnectNonBlock(bool b)
 {
+  if(Serial) Serial.println("\n>>>>>>>>>>Does not do anything, non-blocking mode is default<<<<<<<<<<<<");
   _connectNonBlock = b;
 } //setConnectNonBlock
 

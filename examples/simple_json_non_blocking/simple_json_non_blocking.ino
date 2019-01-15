@@ -41,7 +41,7 @@ void setup() {
   });
 
   //make connecting/disconnecting non-blocking
-  persWM.setConnectNonBlock(true);
+  //persWM.setConnectNonBlock(true); //non blocking mode is enabled by default
 
   persWM.setFSCredentials("admin","password"); //SPIFFs: http://<IP>/edit
   persWM.begin();
@@ -77,7 +77,7 @@ void setup() {
 
 void loop() {
   //in non-blocking mode, handleWiFi must be called in the main loop
-  persWM.handleWiFi();
+  //persWM.handleWiFi(); // no need
   // do stuff with x and y
 
 } //void loop
