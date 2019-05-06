@@ -13,9 +13,23 @@
 #include <Ticker.h>
 
 //#define WIFI_HTM_PROGMEM
-#define WIFI_HTM_GZ_PROGMEM
+//#define WIFI_HTM_GZ_PROGMEM
+//#define WIFI_HTM2_PROGMEM
+#define WIFI_HTM2_GZ_PROGMEM
 
 #define WIFI_CONNECT_TIMEOUT 30
+#define WIFI_RETRY_TIME 60
+#define PERSWIFI_DEBUG  1
+//#define DEBUG_WIFI_MULTI(fmt, ...) if(Serial) Serial.printf( (PGM_P)PSTR(fmt), ##__VA_ARGS__ )
+#define DEBUG_WIFI_MULTI(fmt,...)
+
+struct persWifiAPEntry {
+    char * ssid;
+    char * passphrase;
+    unsigned long ID;
+};
+
+typedef std::vector<persWifiAPEntry> persWifiAPlist;
 
 class PersWiFiManager
 {
@@ -24,6 +38,7 @@ public:
   typedef std::function<void(void)> WiFiChangeHandlerFunction;
 
   PersWiFiManager(AsyncWebServer &s, AsyncDNSServer &d, const fs::FS& fs = SPIFFS);
+  ~PersWiFiManager();
 
   bool attemptConnection(const String &ssid = "", const String &pass = "");
 
@@ -45,7 +60,25 @@ public:
 
   void onConnect(WiFiChangeHandlerFunction fn);
 
+  void onDisConnect(WiFiChangeHandlerFunction fn);
+
   void onAp(WiFiChangeHandlerFunction fn);
+
+  void onStore(WiFiChangeHandlerFunction fn);
+
+  bool addAP(const char* ssid, const char *passphrase = NULL);
+  bool removeAP(const char* ssid);
+  bool existsAP(const char* ssid, const char *passphrase = NULL);
+  persWifiAPlist getAPlist();
+  wl_status_t GetStatus();
+
+
+private:
+  persWifiAPlist APlist;
+  bool APlistAdd(const char* ssid, const char *passphrase = NULL);
+  bool APlistRemove(const char* ssid);
+  bool APlistExists(const char* ssid, const char *passphrase = NULL);
+  void APlistClean(void);
 
 private:
 
@@ -57,10 +90,16 @@ private:
   String _fsUser = "admin", _fsPass = "password";
 
   bool _connectNonBlock;
+  bool _autoReconnect;
+  bool _scanSorted;
   unsigned long _connectStartTime;
+  unsigned long _scanTime;
+
 
   WiFiChangeHandlerFunction _connectHandler;
+  WiFiChangeHandlerFunction _disconnectHandler;
   WiFiChangeHandlerFunction _apHandler;
+  WiFiChangeHandlerFunction _storeHandler;
 
 }; //class
 

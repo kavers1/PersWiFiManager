@@ -8,6 +8,10 @@
 #ifdef WIFI_HTM_PROGMEM
 const char wifi_htm[] PROGMEM = R"=====(<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/><title>ESP WiFi</title><script>function g(i){return document.getElementById(i);};function p(t,l){if(confirm(t)) window.location=l;};function E(s){return document.createElement(s)};var S="setAttribute",A="appendChild",H="innerHTML",X,wl;function scan(){if(X) return;X=new XMLHttpRequest(),wl=document.getElementById('wl');wl[H]="Scanning...";X.onreadystatechange=function(){if (this.readyState==4&&this.status==200){X=0;wl[H]="";this.responseText.split("\n").forEach(function (e){let t=e.split(","), s=t.slice(2).join(',');var d=E('div'),i=E('a'),c=E('a');i[S]('class','s'); c[S]('class','q');i.onclick=function(){g('s').value=s;g('p').focus();};i[A](document.createTextNode(s));c[H]=t[0]+"%"+(parseInt(t[1])?"\uD83D\uDD12":"\u26A0");wl[A](i); wl[A](c);wl[A](document.createElement('br'));});}};X.open("GET","wifi/list",true);X.send();};</script><style>input{padding:5px;font-size:1em;width:95%;}body{text-align:center;font-family:verdana;background-color:black;color:white;}a{color:#1fa3ec;}button{border:0;border-radius:0.3em;background-color:#1fa3ec;color:#fff;line-height:2.4em;font-size:1.2em;width:100%;display:block;}.q{float:right;}.s{display:inline-block;width:14em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}#wl{line-height:1.5em;}</style></head><body><div style='text-align:left;display:inline-block;width:320px;padding:5px'><button onclick="scan()">&#x21bb; Scan</button><p id='wl'></p><form method='post' action='/wifi/connect'><input id='s' name='n' length=32 placeholder='SSID'><br><input id='p' name='p' length=64 type='password' placeholder='password'><br><br><button type='submit'>Connect</button></form><br><br><button onclick="p('Reboot device?','/wifi/rst')">Reboot</button><br><a href="javascript:history.back()">Back</a> |<a href="/">Home</a></div></body></html>)=====";
 #endif
+#ifdef WIFI_HTM2_PROGMEM
+const char wifi_htm[] PROGMEM = R"=====(<!DOCTYPE html><html><head> <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/> <title>ESP WiFi</title> <script>function g(i){return document.getElementById(i);}; function p(t, l){if (confirm(t)) window.location=l;}; function E(s){return document.createElement(s)}; var S="setAttribute", A="appendChild", H="innerHTML", X, wl, R, al; function scan(){if (X) return; X=new XMLHttpRequest(), wl=document.getElementById('wl'); wl[H]="Scanning..."; X.onreadystatechange=function (){if (this.readyState==4){if( this.status==200){X=0; wl[H]=""; this.responseText.split('\n').forEach(function (e){let t=e.split(','), s=t.slice(2).join(','); var d=E('div'), i=E('a'), c=E('a'); i[S]('class', 's'); c[S]('class', 'q'); i.onclick=function (){g('s').value=s; g('p').focus();}; i[A](document.createTextNode(s)); c[H]=t[0] + "%" + (parseInt(t[1]) ? "\uD83D\uDD12" : "\u26A0"); wl[A](i); wl[A](c); wl[A](document.createElement('br'));});}else if ( this.status==202){X=0; wl[H]=this.responseText; setInterval(scan(), 3000);}}}; X.open("GET", "wifi/list", true); X.send();}; function getAPs(){if (R) return; R=new XMLHttpRequest(); al=document.getElementById('al'); al[H]="Retrieving Access points..."; R.onreadystatechange=function(){if (this.readyState==4 && this.status==200){document.getElementById("i").style.display="block"; document.getElementById("st").style.display="block"; document.getElementById("a").style.display="none"; R=0; al[H]=""; this.responseText.split('\n').forEach(function (e){var d=E('div'), c=E('a'); c[S]('class', 's'); c.onclick=function (){g('i').value=e;}; c[A](document.createTextNode(e)); al[A](c); al[A](document.createElement('br'));});}}; R.open('GET', 'wifi/ap', true); R.send();}; // setInterval(getAPs(), 20000); </script> <style>Input{padding: 5px; font-size: 1em; width: 95%;}body{text-align: center; font-family: verdana; background-color: black; color: white;}a{color: #1fa3ec;}button{border: 0; border-radius: 0.3em; background-color: #1fa3ec; color: #fff; line-height: 2.4em; font-size: 1.2em; width: 100%; display: block;}.q{float: right;}.s{display: inline-block; width: 14em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}#wl{line-height: 1.5em;}</style></head><body> <div style='text-align:left;display:inline-block;width:320px;padding:5px'> <button onclick="scan()">Scan</button> <p id='wl'></p><form method='post' action='/wifi/connect' onsubmit="getAPs()"> <input id='s' name='n' length=32 placeholder='SSID'> <br><input id='p' name='p' length=64 type='password' placeholder='password'> <br><br><button type='submit'>Connect</button> </form> <br><p id='al'></p><button id='a' onclick="getAPs()">APs</button> <form method='post' action='/wifi/store'> <input id='i' name='i' length=7 placeholder='SSIDx' style="display:none;"> <br><button id='st' style="display:none;" type='submit'>Store</button> </form> <br><br><button onclick="p('Reboot device?','/wifi/rst')">Reboot</button> <br><a href="javascript:history.back()">Back</a> | <a href="/">Home</a> </div></body></html>)=====";
+#endif
+
 #ifdef WIFI_HTM_GZ_PROGMEM
 #define wifi_htm_gz_len 1103
 static const uint8_t wifi_htm_gz[] PROGMEM = {
@@ -105,13 +109,131 @@ static const uint8_t wifi_htm_gz[] PROGMEM = {
   0xaf, 0xfc, 0x04, 0x35, 0x76, 0x39, 0x90, 0x7c, 0x07, 0x00, 0x00
 };
 #endif
+#ifdef WIFI_HTM2_GZ_PROGMEM
+#define wifi_htm_gz_len 1273
+static const uint8_t wifi_htm_gz[] PROGMEM = {
+0x1f, 0x8b, 0x08, 0x00, 0x5d, 0x94, 0xaf, 0x5c, 0x00, 0xff, 0x9d, 0x56, 
+0x6d, 0x73, 0xd3, 0x38, 0x10, 0xfe, 0x7e, 0xbf, 0xc2, 0x98, 0x81, 0xd8, 
+0x83, 0xe3, 0xbc, 0x14, 0xb8, 0x3b, 0x3b, 0x32, 0x53, 0x68, 0xef, 0xda, 
+0x19, 0xb8, 0x61, 0x12, 0x66, 0xae, 0x33, 0xa5, 0x1f, 0x14, 0x7b, 0x9d, 
+0x08, 0x14, 0xc9, 0x48, 0x72, 0x4c, 0x2e, 0xe7, 0xff, 0xce, 0xca, 0x8e, 
+0xd3, 0x94, 0xb4, 0xdc, 0x1c, 0x1f, 0x9c, 0xac, 0xac, 0x7d, 0x7b, 0x76, 
+0x9f, 0x95, 0x35, 0x79, 0x94, 0xc9, 0xd4, 0x6c, 0x0a, 0x58, 0x9a, 0x15, 
+0x4f, 0x26, 0x2b, 0x30, 0xd4, 0x49, 0xa5, 0x30, 0x20, 0x0c, 0x71, 0x2b, 
+0x96, 0x99, 0x25, 0xc9, 0x60, 0xcd, 0x52, 0xe8, 0x37, 0x8b, 0x80, 0x09, 
+0x66, 0x18, 0xe5, 0x7d, 0x9d, 0x52, 0x0e, 0x64, 0x14, 0x94, 0x1a, 0x54, 
+0xb3, 0xa0, 0x73, 0x5c, 0x0b, 0xe9, 0x0a, 0xba, 0x02, 0xb2, 0x66, 0x50, 
+0x15, 0x52, 0x99, 0x64, 0x62, 0x98, 0xe1, 0x90, 0x9c, 0xcf, 0xde, 0x3b, 
+0x7f, 0xb3, 0x3f, 0xd8, 0x64, 0xd0, 0xae, 0x27, 0x3a, 0x55, 0xac, 0x30, 
+0x49, 0x5e, 0x8a, 0xd4, 0x30, 0x29, 0x9c, 0x85, 0xc7, 0xfc, 0xad, 0x02, 
+0x53, 0x2a, 0xe1, 0x60, 0x42, 0xe5, 0x0a, 0xe3, 0x87, 0x0b, 0x30, 0xe7, 
+0x1c, 0xac, 0xf8, 0x7a, 0x73, 0x99, 0xa1, 0x46, 0x1d, 0xef, 0x0d, 0x0a, 
+0xcf, 0x04, 0xdc, 0xdf, 0xb2, 0xdc, 0xc3, 0x6c, 0x73, 0xa6, 0x56, 0x9e, 
+0xf1, 0xfd, 0x8a, 0x89, 0x4c, 0x56, 0x21, 0x97, 0x29, 0xb5, 0x4a, 0x84, 
+0x1f, 0x18, 0x9c, 0x7b, 0xfa, 0x38, 0x42, 0xaa, 0x80, 0x1a, 0xd8, 0x05, 
+0x41, 0x85, 0x3a, 0x5e, 0x53, 0xe5, 0xcc, 0x88, 0xab, 0xc1, 0x9c, 0x1a, 
+0xa3, 0xd8, 0xbc, 0x34, 0xe0, 0x06, 0xa7, 0xc4, 0xa5, 0x45, 0x01, 0x22, 
+0x7b, 0xb3, 0x64, 0x3c, 0x73, 0x83, 0x0b, 0xe2, 0x32, 0x21, 0x40, 0x5d, 
+0x7c, 0x78, 0xf7, 0xd6, 0x0d, 0xae, 0x82, 0x8a, 0x07, 0xd3, 0x80, 0xf2, 
+0xdb, 0x60, 0x58, 0x10, 0xe1, 0x35, 0xd9, 0x5d, 0xf9, 0x6d, 0xcc, 0xf8, 
+0x8a, 0x08, 0xa8, 0x9c, 0xab, 0x77, 0x6f, 0x2f, 0x8c, 0x29, 0xa6, 0xf0, 
+0xa5, 0x04, 0x6d, 0x3c, 0x1f, 0x4d, 0xc9, 0x43, 0x78, 0x7b, 0x15, 0xef, 
+0xf9, 0x71, 0xc5, 0xaf, 0x2f, 0x6e, 0x88, 0x3b, 0x43, 0x8f, 0x82, 0x89, 
+0x45, 0x18, 0x86, 0x6e, 0x7c, 0x15, 0x4a, 0x81, 0x99, 0x67, 0x1b, 0x6d, 
+0x30, 0xfd, 0x74, 0x49, 0xc5, 0x02, 0x48, 0x17, 0xbc, 0x8d, 0x6b, 0x96, 
+0x4c, 0x87, 0x8d, 0xce, 0xcc, 0xea, 0x10, 0xf2, 0xfc, 0xf6, 0xb5, 0xb5, 
+0x2a, 0x35, 0x21, 0xe3, 0xe1, 0xd0, 0xdf, 0x5e, 0x91, 0x61, 0x17, 0xc3, 
+0x8d, 0x77, 0x56, 0xba, 0x90, 0x42, 0xc3, 0x07, 0xf8, 0x6a, 0x42, 0x5d, 
+0x70, 0x66, 0xbc, 0xde, 0x47, 0xd1, 0xf3, 0xc3, 0x5c, 0xaa, 0x73, 0x9a, 
+0x2e, 0xbd, 0x7d, 0x24, 0xf0, 0xb7, 0x1c, 0x8c, 0x63, 0x08, 0x74, 0x7a, 
+0x41, 0xcf, 0x0f, 0x34, 0x41, 0x33, 0x8e, 0x94, 0xf1, 0xc6, 0x7e, 0xf8, 
+0x49, 0x32, 0xd1, 0xbc, 0x6e, 0x2a, 0x9b, 0x91, 0x73, 0xaf, 0x97, 0xb1, 
+0x35, 0x6a, 0x31, 0x2b, 0x52, 0x14, 0xd2, 0x9d, 0x10, 0xb3, 0xeb, 0xd9, 
+0x8d, 0xd7, 0x4b, 0x39, 0xd5, 0x1a, 0x0d, 0x34, 0xbe, 0x49, 0xef, 0xbc, 
+0xf9, 0x62, 0x75, 0x10, 0x79, 0x8a, 0xbe, 0x3f, 0x1f, 0xc2, 0x5d, 0x78, 
+0x56, 0x3b, 0x5c, 0x53, 0x5e, 0x02, 0xd1, 0x31, 0x2e, 0x8b, 0x26, 0xdb, 
+0xb4, 0xd4, 0x1e, 0xb6, 0x94, 0x5d, 0x9f, 0xde, 0x78, 0xdf, 0xb5, 0xdc, 
+0x62, 0xfb, 0x4b, 0x66, 0x80, 0x3d, 0xb7, 0x61, 0x10, 0xbd, 0xb9, 0x1e, 
+0xde, 0x3c, 0x73, 0x9f, 0xb8, 0xcf, 0xbc, 0x82, 0x2a, 0x0d, 0x97, 0xc8, 
+0x07, 0x73, 0x3d, 0xba, 0xf1, 0x5f, 0xb9, 0x1f, 0xcb, 0xb3, 0xdf, 0x4e, 
+0xce, 0xf0, 0xf7, 0x6c, 0x34, 0x76, 0x23, 0x5c, 0x8e, 0x5f, 0x9e, 0x0e, 
+0xdd, 0xa6, 0x33, 0xe8, 0x98, 0x75, 0x42, 0xda, 0x09, 0x0f, 0xb0, 0xab, 
+0x37, 0x57, 0x3d, 0xdf, 0xaf, 0xfd, 0xfa, 0x17, 0xe0, 0x1a, 0x9c, 0xe3, 
+0x66, 0x8c, 0x0f, 0x9b, 0x71, 0xd4, 0x89, 0x18, 0x29, 0x89, 0x49, 0x81, 
+0x42, 0x98, 0x5e, 0xcb, 0xaf, 0xe0, 0x64, 0x88, 0x1d, 0xac, 0xeb, 0xda, 
+0x12, 0x02, 0xe9, 0xe9, 0xb9, 0x7f, 0x9e, 0x7f, 0x70, 0x03, 0x1c, 0xdb, 
+0x9c, 0x0d, 0x38, 0xd3, 0xc6, 0x0d, 0x1e, 0x0d, 0x7d, 0xdc, 0xd4, 0x48, 
+0x5d, 0x5b, 0x89, 0xdb, 0x71, 0x43, 0x7a, 0xbf, 0xc7, 0xe2, 0x58, 0x4a, 
+0x4c, 0x3b, 0x86, 0x4e, 0xef, 0x65, 0x68, 0x4c, 0x7f, 0xc0, 0x50, 0x6a, 
+0x19, 0x4a, 0x5b, 0xf6, 0x4c, 0x01, 0xe7, 0x05, 0x8f, 0x0a, 0xb1, 0x70, 
+0x4e, 0xd3, 0x14, 0xb4, 0x76, 0x0a, 0xec, 0xbd, 0xd1, 0x0d, 0x63, 0xa7, 
+0x3f, 0xc3, 0xd8, 0xa7, 0x4f, 0x8f, 0xe9, 0xfa, 0x50, 0x2a, 0x2e, 0x73, 
+0x7d, 0xd4, 0xdc, 0x70, 0x08, 0x33, 0x86, 0x64, 0xa4, 0x1b, 0xe2, 0xce, 
+0xf1, 0x20, 0xf8, 0xec, 0xc6, 0x0f, 0x9a, 0x60, 0x81, 0xfe, 0xb7, 0x0d, 
+0x3d, 0x36, 0x11, 0x52, 0x00, 0x22, 0xc4, 0xd6, 0xed, 0x2a, 0xf1, 0x33, 
+0x73, 0xf4, 0xdd, 0x74, 0xec, 0x87, 0xe2, 0xee, 0x08, 0x34, 0x43, 0xf1, 
+0xc0, 0x08, 0xb0, 0xfd, 0x08, 0x40, 0x8d, 0x66, 0x3f, 0xe0, 0x3c, 0x20, 
+0xe7, 0x31, 0xd5, 0x96, 0xb3, 0xad, 0xf0, 0x5f, 0x9c, 0xad, 0x6d, 0x07, 
+0x2d, 0xc5, 0x7a, 0x48, 0x31, 0x4c, 0xa4, 0xa1, 0x18, 0x2d, 0x7a, 0x0d, 
+0xc1, 0xa6, 0x1d, 0xc1, 0x26, 0x83, 0xdd, 0xb9, 0x3e, 0x69, 0x4a, 0x94, 
+0x5c, 0x8a, 0xa2, 0x34, 0xdb, 0x82, 0x66, 0x19, 0xb2, 0x22, 0x7a, 0x51, 
+0x7c, 0x8d, 0x73, 0xfc, 0xb4, 0xf4, 0x35, 0xfb, 0x07, 0xa2, 0x11, 0xac, 
+0xe2, 0xe6, 0x93, 0x12, 0xfd, 0xfe, 0xe2, 0x49, 0x3d, 0x97, 0xd9, 0x66, 
+0x6b, 0x30, 0xc1, 0x3e, 0xe5, 0x6c, 0x21, 0xa2, 0x14, 0xa3, 0x83, 0x6a, 
+0xd5, 0x73, 0xba, 0x62, 0x7c, 0x13, 0xad, 0x41, 0x65, 0x54, 0xd0, 0x78, 
+0x4e, 0xd3, 0xcf, 0x0b, 0x25, 0x4b, 0x91, 0xf5, 0x53, 0xc9, 0xa5, 0x8a, 
+0x1e, 0xe3, 0x14, 0xc4, 0x3b, 0x31, 0xcf, 0xf3, 0x9a, 0x6e, 0x77, 0x8b, 
+0x51, 0x4e, 0x4f, 0x20, 0xad, 0xf1, 0x0c, 0x37, 0x52, 0x6c, 0xe7, 0x52, 
+0x65, 0xa0, 0xa2, 0x61, 0xdc, 0x0a, 0x7d, 0x45, 0x33, 0x56, 0xea, 0x28, 
+0x3c, 0xc1, 0x44, 0x8e, 0x7d, 0xb6, 0xb6, 0x07, 0x6e, 0x63, 0xce, 0x04, 
+0xf4, 0x97, 0xc0, 0x16, 0x4b, 0x13, 0x8d, 0xc3, 0xe7, 0x68, 0x75, 0x00, 
+0x26, 0x1c, 0xef, 0xe1, 0x8c, 0x86, 0xc3, 0x27, 0xf1, 0x8e, 0x1c, 0x51, 
+0x43, 0xa7, 0x3a, 0xfc, 0xb2, 0xcd, 0xb9, 0xa4, 0x26, 0x52, 0xd6, 0xba, 
+0x0e, 0xf5, 0xb6, 0xdb, 0x67, 0xa2, 0x71, 0xdb, 0xa8, 0x75, 0xf6, 0xd6, 
+0xb5, 0x44, 0xb4, 0x68, 0x52, 0x45, 0x4b, 0x96, 0x65, 0x20, 0xe2, 0xa6, 
+0x34, 0xfb, 0x97, 0xc0, 0x39, 0x2b, 0x34, 0xd3, 0x71, 0xb5, 0x64, 0x06, 
+0xfa, 0xba, 0xa0, 0x29, 0x44, 0x42, 0x56, 0x8a, 0x16, 0xf5, 0xe3, 0x8a, 
+0x6f, 0x0f, 0x53, 0x1d, 0x85, 0x2f, 0x60, 0x65, 0x3b, 0xd3, 0x74, 0x64, 
+0x82, 0xf4, 0x72, 0x1a, 0x91, 0x1c, 0x54, 0x9b, 0x43, 0x6e, 0xf6, 0x29, 
+0xdf, 0x93, 0xd2, 0xc9, 0x78, 0x88, 0xbd, 0x3b, 0xe8, 0x63, 0x32, 0x69, 
+0x8b, 0xea, 0x74, 0x54, 0x6c, 0x0f, 0xa4, 0xc4, 0x7e, 0xa5, 0x26, 0x83, 
+0x76, 0x2f, 0x99, 0x14, 0x0e, 0xcb, 0x48, 0x85, 0xb7, 0x0a, 0x24, 0xfc, 
+0xca, 0xa1, 0x0d, 0x57, 0xc9, 0xa0, 0xa1, 0x0e, 0x7e, 0xb4, 0x05, 0xa4, 
+0xc6, 0xc1, 0xfb, 0xc6, 0x52, 0x66, 0xa4, 0x90, 0xda, 0xa0, 0x2f, 0x5d, 
+0xce, 0x57, 0xcc, 0x90, 0xee, 0x74, 0x4a, 0x26, 0xcc, 0x12, 0xc8, 0x7a, 
+0xd1, 0x0e, 0x07, 0xb1, 0xc0, 0xcb, 0xc8, 0xc9, 0xd8, 0x69, 0x6e, 0x18, 
+0x78, 0x03, 0xe0, 0x88, 0x7a, 0x29, 0x39, 0xf6, 0x92, 0xcc, 0x66, 0x97, 
+0x67, 0x98, 0x93, 0x3a, 0xb0, 0x28, 0x3a, 0x8b, 0x97, 0xcf, 0x5b, 0x8b, 
+0xe2, 0x8e, 0x45, 0x81, 0x03, 0x55, 0x21, 0x11, 0x1c, 0x7b, 0xf7, 0xd9, 
+0xaf, 0x5a, 0x1f, 0xcd, 0xd3, 0xe2, 0x6b, 0x76, 0xdb, 0xb4, 0x92, 0x37, 
+0x6d, 0xce, 0xb7, 0xf8, 0x06, 0x16, 0x57, 0xab, 0xde, 0x40, 0xa5, 0x08, 
+0x75, 0x50, 0x1c, 0xd5, 0xa6, 0x83, 0xd3, 0xa8, 0x24, 0x28, 0xde, 0x7a, 
+0x38, 0x2e, 0x8c, 0x36, 0x52, 0xc1, 0x61, 0x59, 0x0e, 0x20, 0xb1, 0x0e, 
+0xd2, 0xaf, 0x2d, 0x22, 0x76, 0x54, 0x83, 0xaf, 0xbb, 0xde, 0x76, 0xbd, 
+0xb4, 0x47, 0xd3, 0x1d, 0x3c, 0xb6, 0x94, 0xe6, 0x1e, 0xa5, 0x3b, 0x40, 
+0x67, 0x36, 0x87, 0x7b, 0x61, 0x1e, 0x78, 0xea, 0xd0, 0xf5, 0x0a, 0x0f, 
+0x8f, 0xfe, 0xb9, 0x94, 0xc6, 0x69, 0x2f, 0x8a, 0xaf, 0xf0, 0x0b, 0xd4, 
+0x62, 0x51, 0xf6, 0x80, 0xed, 0x25, 0xed, 0xee, 0xad, 0x3f, 0xeb, 0x84, 
+0x3a, 0x4b, 0x05, 0x39, 0xf9, 0x44, 0xd7, 0xb4, 0x3d, 0x32, 0x90, 0xe8, 
+0x16, 0xfa, 0x26, 0xb4, 0xa3, 0x88, 0xad, 0x7f, 0x8d, 0x7f, 0x93, 0x01, 
+0x4d, 0xfe, 0xed, 0x54, 0x07, 0x4e, 0x72, 0x21, 0x57, 0x98, 0x16, 0xc5, 
+0x8c, 0x90, 0xc5, 0xc9, 0x37, 0xad, 0x78, 0x3e, 0x86, 0xba, 0x0a, 0x00, 
+0x00
+};
+#endif
 
 PersWiFiManager::PersWiFiManager(AsyncWebServer &s, AsyncDNSServer &d, const fs::FS& fs):_fs(fs)
 {
   _aserver = &s;
   _adnsServer = &d;
   _apPass = "";
+  _scanTime = 0;
+  _autoReconnect = true;
 } //PersWiFiManager
+
+PersWiFiManager::~PersWiFiManager() {
+    APlistClean();
+}
 
 bool PersWiFiManager::attemptConnection(const String &ssid, const String &pass)
 {
@@ -119,7 +241,9 @@ bool PersWiFiManager::attemptConnection(const String &ssid, const String &pass)
   WiFi.mode(WIFI_STA);
   if (ssid.length())
   {
+#ifdef PERSWIFI_DEBUG    
     if(Serial) Serial.printf("Connecting to SSID: %s\n", ssid.c_str());
+#endif    
     if (pass.length())
       WiFi.begin(ssid.c_str(), pass.c_str());
     else
@@ -127,11 +251,14 @@ bool PersWiFiManager::attemptConnection(const String &ssid, const String &pass)
   }
   else
   {
+#ifdef PERSWIFI_DEBUG    
     if(Serial) Serial.printf("Connecting to previously stored WiFi credentials.\n");
+#endif
     WiFi.begin();
   }
-
+  
   _connectStartTime = millis();
+  _scanTime = 0;  // mark a fresh connection attempt
   
   _tkWiFiH.attach_ms(10, std::bind(&PersWiFiManager::handleWiFi, this));
   
@@ -139,31 +266,175 @@ bool PersWiFiManager::attemptConnection(const String &ssid, const String &pass)
 
 } //attemptConnection
 
+// unsigned long _reportTime;
+
 void PersWiFiManager::handleWiFi()
 {
-  if (!_connectStartTime)
-    return;
+//  if (millis() > _reportTime + 1000){
+//    _reportTime = millis();
+//    if(Serial) {
+//      Serial.print(WiFi.status());
+//    }
+//  }
 
-  if (WiFi.status() == WL_CONNECTED)
-  {
+  //if (!_connectStartTime)
+  //  return;
+  switch (WiFi.status()) {
+  case WL_CONNECTED :
+    if (!_connectStartTime)
+      return;
     _connectStartTime = 0;
+    if (_scanTime)
+      WiFi.scanDelete(); // clean up the last scan
+    _scanTime = 0;
+    if (_autoReconnect && ! existsAP(WiFi.SSID().c_str(), WiFi.psk().c_str())) // store current succes for later retries
+      addAP(WiFi.SSID().c_str(), WiFi.psk().c_str());
     if (_connectHandler)
       _connectHandler();
     return;
+#ifdef PERSWIFI_DEBUG    
     if (Serial) { 
       Serial.print("Router IP: ");
-      Serial.println(WiFi.localIP());
+      Serial.print(WiFi.localIP());
+      Serial.print(" On SSID: ");
+      Serial.println(WiFi.SSID());
+    }    
+#endif
+    break;
+  case WL_DISCONNECTED :
+    // if trying to connect wait for time out
+    if ((_connectStartTime) && ((millis() - _connectStartTime) < (1000 * WIFI_CONNECT_TIMEOUT))){
+      return; // still giving time to setup the connection
+    }
+    if (_disconnectHandler)
+      _disconnectHandler();
+    // if disconnected after connection see if we have to reconnect
+    if (_autoReconnect ) {  /// ??? is this correct
+#ifdef PERSWIFI_DEBUG      
+      if (Serial)
+        Serial.println(" Trying to reconnect to stored AP's "); 
+#endif        
+    }
+  case WL_IDLE_STATUS:
+    if (!_autoReconnect) {
+      Serial.println(" no auto reconnect");
+      _scanTime = 0;
+      _connectStartTime = 0;
+      return;
+    }
+  case WL_SCAN_COMPLETED :
+  case WL_NO_SSID_AVAIL :
+  case WL_CONNECT_FAILED :
+  case WL_CONNECTION_LOST :
+    // all these cases we try to connect to a stored AP 
+    // check if the scan is done 
+    // is no scan start --> start scanning and wait for completiong
+    // if scan is done sort by signal strength and try to connect to all of the available stored AP's
+    if (APlist.size() >0) { // do we have other AP to connect to ?
+      if ((_scanTime == 0) || (millis() - _scanTime > (1000 * WIFI_RETRY_TIME))){ // no scan started
+#ifdef PERSWIFI_DEBUG      
+        if (Serial){
+          Serial.println("Scan networks for AP's");
+        }
+#endif        
+        _scanTime = millis();
+        WiFi.scanDelete();
+        //  for( auto entry : APlist )
+        //  does not allow me to set the ID to the scantime. no idea why
+        //  so went for the old for loop
+        for(unsigned int i = 0; i < APlist.size(); i++){
+          APlist.at(i).ID = _scanTime;
+        }
+#ifdef PERSWIFI_DEBUG        
+        if (Serial)
+          for( auto entry : APlist ){
+            Serial.print(entry.ID);Serial.print(" ");Serial.println( entry.ssid);
+          }
+#endif          
+        WiFi.scanNetworks(true);
+      }
+      else
+      {
+        int n = WiFi.scanComplete();
+        if (n == -1 ) { // not finished yet
+          return;
+        }
+        if (n != -2){  // scan done sort, filter and loop over results to try reconnecting
+#ifdef PERSWIFI_DEBUG        
+          Serial.print( "scan done "); Serial.print(n); Serial.print(" @time ");Serial.println(_scanTime);
+          for( auto entry : APlist ){
+            Serial.print(entry.ID);Serial.print(" ");Serial.println( entry.ssid);
+          }
+#endif          
+          int ix[n+1];
+          for (int i = 0; i < n+1; i++)
+            ix[i] = i;
+          //sort by signal strength
+          for (int i = 0; i < n; i++)
+            for (int j = 1; j < n - i; j++)
+              if (WiFi.RSSI(ix[j]) > WiFi.RSSI(ix[j - 1]))
+                std::swap(ix[j], ix[j - 1]);
+          //remove duplicates
+          for (int i = 0; i < n; i++){
+            if (ix[i]>=0){
+              for (int j = i + 1; j < n; j++){
+                if ((ix[j] >= -1) && (WiFi.SSID(ix[i]).equals(WiFi.SSID(ix[j])) && WiFi.encryptionType(ix[i]) == WiFi.encryptionType(ix[j])))
+                  ix[j] = -1;
+              }
+              // check if SSID is in stored AP's and connect               
+              for(unsigned int k = 0; k < APlist.size(); k++){
+                if(APlist.at(k).ID == _scanTime) {
+#ifdef PERSWIFI_DEBUG                  
+                  Serial.print(i);Serial.print(" : ");
+                  Serial.print ( " compare " ); Serial.print(WiFi.SSID(ix[i])); Serial.print(" <> "); Serial.println(APlist.at(k).ssid); 
+#endif                  
+                  if (WiFi.SSID(ix[i]).equals(APlist.at(k).ssid)) { // SSID match
+                    APlist.at(k).ID = 0;
+#ifdef PERSWIFI_DEBUG                    
+                    if (Serial){
+                      Serial.print("Try to connect to : ");
+                      Serial.println(WiFi.SSID(ix[i]));
+                    }
+#endif                    
+                    if (APlist.at(k).passphrase)
+                      WiFi.begin(APlist.at(k).ssid, APlist.at(k).passphrase);
+                    else
+                      WiFi.begin(APlist.at(k).ssid);
+                    _connectStartTime = millis(); // reset connect time out
+                    return;
+                  }
+                }
+              }
+            }
+          }
+        }
+#ifdef PERSWIFI_DEBUG      
+        Serial.println("");
+        Serial.println(" Start AP mode");
+#endif        
+        startApMode();
+        _connectStartTime = 0; //reset connect start time
+      }
+    }
+    else // no additional AP's defined
+    {
+      startApMode();
+      _connectStartTime = 0; //reset connect start time
     }
   }
 
-  //if failed or not connected and time is up
-  if ((WiFi.status() == WL_CONNECT_FAILED) || ((WiFi.status() != WL_CONNECTED) && ((millis() - _connectStartTime) > (1000 * WIFI_CONNECT_TIMEOUT))))
-  {
-    startApMode();
-    _connectStartTime = 0; //reset connect start time
-  }
-
 } //handleWiFi
+
+wl_status_t PersWiFiManager::GetStatus()
+{ 
+  wl_status_t status = WiFi.status();
+  if (_connectStartTime == (unsigned long) 0) // if no attemp to connect return the real status
+    return status;
+  if (status == (wl_status_t) WL_CONNECTED) // if connected return connected
+    return status;
+  else                       // else report that we are still trying to connect whatever the status is
+    return WL_IDLE_STATUS;
+}
 
 void PersWiFiManager::startApMode()
 {
@@ -172,48 +443,45 @@ void PersWiFiManager::startApMode()
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   _apPass.length() ? WiFi.softAP(getApSsid().c_str(), _apPass.c_str()) : WiFi.softAP(getApSsid().c_str());
+#ifdef PERSWIFI_DEBUG  
   if(Serial) {
     Serial.print("Started AP mode, IP: ");
     Serial.println(WiFi.softAPIP());
     Serial.println("--------------");
   }
+#endif  
   if (_apHandler)
     _apHandler();
 } //startApMode
 
 void PersWiFiManager::setConnectNonBlock(bool b)
 {
-  if(Serial) Serial.println("\n>>>>>>>>>>Does not do anything, non-blocking mode is default<<<<<<<<<<<<");
+  DEBUG_WIFI_MULTI("\n>>>>>>>>>>Does not do anything, non-blocking mode is default<<<<<<<<<<<<");
   _connectNonBlock = b;
 } //setConnectNonBlock
 
 void PersWiFiManager::setupWiFiHandlers()
 {
-  if (Serial)
-  {
-    Serial.println("\n\n---------------------------");
-    Serial.println("Starting SPIFFs...");
-  }
+  DEBUG_WIFI_MULTI("\n\n---------------------------");
+  DEBUG_WIFI_MULTI("Starting SPIFFs...");
 
+#ifdef PERSWIFI_DEBUG 
   if (_fs.begin())
   {
+     
     Dir dir = _fs.openDir("/");
     while (dir.next())
     {
       String fileName = dir.fileName();
       size_t fileSize = dir.fileSize();
-      if (Serial)
-        Serial.printf("FS File: %s, size: %dB\n", fileName.c_str(), fileSize);
+      DEBUG_WIFI_MULTI("FS File: %s, size: %dB\n", fileName.c_str(), fileSize);
     }
 
     FSInfo fs_info;
     _fs.info(fs_info);
-    if (Serial)
-    {
-      Serial.printf("FS Usage: %d/%d bytes\n\n", fs_info.usedBytes, fs_info.totalBytes);
-      Serial.println("SPIFFs started");
-    }
+    DEBUG_WIFI_MULTI("FS Usage: %d/%d bytes\n\nSPIFFs started\n", fs_info.usedBytes, fs_info.totalBytes);
   }
+#endif    
 
   IPAddress apIP(192, 168, 1, 1);
   _adnsServer->setErrorReplyCode(AsyncDNSReplyCode::NoError);
@@ -221,15 +489,19 @@ void PersWiFiManager::setupWiFiHandlers()
 
   _aserver->on("/wifi/list", HTTP_GET, [](AsyncWebServerRequest *request) {
     //scan for wifi networks
-    String s = "Scan again after 3-5s";
+    String s = "list";
     s.reserve(2050);
 
     int n = WiFi.scanComplete();
-    if (n == -2)
+    DEBUG_WIFI_MULTI("get list : %d\n",n);
+    if (n == -2) //WIFI_SCAN_FAILED    (-2)
     {
       WiFi.scanNetworks(true);
+      request->send(202, "text/plain", "Scan updating. Refresh after 3-5s");
+      DEBUG_WIFI_MULTI("Scanning networks refresh in 5 sec\n");
+      return;
     }
-    else if (n)
+    else if (n) // n != -1  WIFI_SCAN_RUNNING   (-1)
     {
       //build array of indices
       int ix[n];
@@ -262,28 +534,54 @@ void PersWiFiManager::setupWiFiHandlers()
       {
         WiFi.scanNetworks(true);
       }
+      if ( n > 0) {
+        DEBUG_WIFI_MULTI("Sending >>>>>>>>>>>>>\n%s\n<<<<<<<<<<<<<<<<<<<<<",s.c_str());
+        request->send(200, "text/plain", s);
+      }
+      else
+        request->send(202, "text/plain", "Still scanning ...");
     }
-    if (Serial)
-    {
-      Serial.print("Sending >>>>>>>>>>>>>\n");
-      Serial.println(s);
-      Serial.println("<<<<<<<<<<<<<<<<<<<<<");
-    }
-
-    //send string to client
-    request->send(200, "text/plain", s);
     s = String();
   }); //_aserver->on /wifi/list
 
   _aserver->on("/wifi/connect", HTTP_POST, [&](AsyncWebServerRequest *request) {
-    request->send(200, "text/html", "<META http-equiv='refresh' content='15;URL=/'> Connecting...");
+    request->send(200, "text/html", "<META http-equiv='refresh' content='10;URL=/wifi'> Connecting...");
     if (request->hasArg("n") and request->hasArg("p"))
       attemptConnection(request->arg("n"), request->arg("p"));
   }); //_aserver->on /wifi/connect
 
+  _aserver->on("/wifi/store", HTTP_POST, [&](AsyncWebServerRequest *request) {
+    request->send(200, "text/html", "<META http-equiv='refresh' content='5;URL=/wifi'> Store...");
+    if (request->hasArg("i") ) {
+      if(request->arg("i")) {
+        DEBUG_WIFI_MULTI("remove store info for %s \n",request->arg("i").c_str());
+        removeAP(WiFi.SSID().c_str());
+        DEBUG_WIFI_MULTI("Store current connection for %s \n",WiFi.SSID().c_str());
+      }
+      else
+      {
+        DEBUG_WIFI_MULTI("Add current connection for %s \n",WiFi.SSID().c_str());
+      }
+      addAP(WiFi.SSID().c_str(),WiFi.psk().c_str());
+      if (_storeHandler) // let outside world know there has been a change
+        _storeHandler();
+    }
+  }); //_aserver->on /wifi/store
+
+
   _aserver->on("/wifi/ap", HTTP_GET, [&](AsyncWebServerRequest *request) {
-    request->send(200, "text/html", "<META http-equiv='refresh' content='15;URL=/'> Access point: " + getApSsid());
-    startApMode();
+    /// todo instead of config.json we have to return the APlist
+    String s = "list";
+    s.reserve(APlist.size()*40);
+    s = "";
+    for(auto entry : APlist) {
+        s += String(entry.ssid) + "\n";
+    }
+    Serial.println(s);
+    request->send(200, "text/html", s);
+    //request->send(SPIFFS, "/config.json", "application/json",true);
+    DEBUG_WIFI_MULTI("                              access point is : %s \n",getApSsid().c_str());
+    //startApMode();
   }); //_aserver->on /wifi/ap
 
   _aserver->on("/wifi/restart", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -364,6 +662,20 @@ void PersWiFiManager::setupWiFiHandlers()
   });
 #endif
 
+#ifdef WIFI_HTM2_PROGMEM
+  _aserver->on("/wifi", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/html", wifi_htm);
+  });
+#endif
+
+#ifdef WIFI_HTM2_GZ_PROGMEM
+  _aserver->on("/wifi", HTTP_GET, [](AsyncWebServerRequest *request) {
+    AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", wifi_htm_gz, wifi_htm_gz_len);
+    response->addHeader("Content-Encoding", "gzip");
+    request->send(response);
+  });
+#endif
+
 } //setupWiFiHandlers
 
 void PersWiFiManager::setFSCredentials(const String &http_user, const String &http_pass)
@@ -398,7 +710,143 @@ void PersWiFiManager::onConnect(WiFiChangeHandlerFunction fn)
   _connectHandler = fn;
 }
 
+void PersWiFiManager::onDisConnect(WiFiChangeHandlerFunction fn)
+{
+  _disconnectHandler = fn;
+}
+
 void PersWiFiManager::onAp(WiFiChangeHandlerFunction fn)
 {
   _apHandler = fn;
+}
+
+void PersWiFiManager::onStore(WiFiChangeHandlerFunction fn)
+{
+  _storeHandler = fn;
+}
+
+
+persWifiAPlist PersWiFiManager::getAPlist(){
+  return APlist;
+}
+bool PersWiFiManager::removeAP(const char* ssid) {
+    return APlistRemove(ssid);
+}
+
+bool PersWiFiManager::addAP(const char* ssid, const char *passphrase) {
+    return APlistAdd(ssid, passphrase);
+}
+
+bool PersWiFiManager::existsAP(const char* ssid, const char *passphrase) {
+    return APlistExists(ssid, passphrase);
+}
+
+bool PersWiFiManager::APlistRemove(const char* ssid) {
+  int i = 0;
+    for(auto entry : APlist) {
+      if(!strcmp(entry.ssid, ssid)) {
+        APlist.erase(APlist.begin()+i);
+        DEBUG_WIFI_MULTI("[WIFI][APlistRemove] remove SSID: %s\n", ssid);
+        return true;
+      }
+      i++;
+    }
+    DEBUG_WIFI_MULTI("[WIFI][APlistRemove] SSID: %s not found\n", ssid);
+    return false;
+}
+
+bool PersWiFiManager::APlistAdd(const char* ssid, const char *passphrase) {
+
+    persWifiAPEntry newAP;
+
+    if(!ssid || *ssid == 0x00 || strlen(ssid) > 32) {
+        // fail SSID too long or missing!
+        DEBUG_WIFI_MULTI("[WIFI][APlistAdd] no ssid or ssid too long\n");
+        return false;
+    }
+
+    //for passphrase, max is 63 ascii + null. For psk, 64hex + null.
+    if(passphrase && strlen(passphrase) > 64) {
+        // fail passphrase too long!
+        DEBUG_WIFI_MULTI("[WIFI][APlistAdd] passphrase too long\n");
+        return false;
+    }
+
+    if(APlistExists(ssid, NULL)) { //does SSID already exists ??
+      DEBUG_WIFI_MULTI("[WIFI][APlistAdd] SSID: %s already exists\n", ssid);
+      if(APlistExists(ssid, passphrase)) {  // and is the password identical
+        DEBUG_WIFI_MULTI("[WIFI][APlistAdd] SSID: %s already exists no updata needed\n", ssid);
+        return true;
+      }
+      else{
+        for(auto entry : APlist) {
+          if(!strcmp(entry.ssid, ssid)) { // update the password
+            entry.passphrase = strdup(passphrase);
+          }
+        }
+        DEBUG_WIFI_MULTI("[WIFI][APlistAdd] SSID: %s updated password\n", ssid);
+        return true;
+      }
+    }
+
+    newAP.ssid = strdup(ssid);
+
+    if(!newAP.ssid) {
+        DEBUG_WIFI_MULTI("[WIFI][APlistAdd] fail newAP.ssid == 0\n");
+        return false;
+    }
+
+    if(passphrase) {
+        newAP.passphrase = strdup(passphrase);
+    } else {
+        newAP.passphrase = strdup("");
+    }
+
+    if(!newAP.passphrase) {
+        DEBUG_WIFI_MULTI("[WIFI][APlistAdd] fail newAP.passphrase == 0\n");
+        free(newAP.ssid);
+        return false;
+    }
+
+    newAP.ID = APlist.size();
+    
+    APlist.push_back(newAP);
+    DEBUG_WIFI_MULTI("[WIFI][APlistAdd] add SSID: %s\n", newAP.ssid);
+    return true;
+}
+
+bool PersWiFiManager::APlistExists(const char* ssid, const char *passphrase) {
+  DEBUG_WIFI_MULTI("[WIFI][APlistExists] check if ssid %s exists ?",ssid);
+    if(!ssid || *ssid == 0x00 || strlen(ssid) > 32) {
+        // fail SSID too long or missing!
+        DEBUG_WIFI_MULTI("[WIFI][APlistExists] no ssid or ssid too long\n");
+        return false;
+    }
+    for(auto entry : APlist) {
+        if(!strcmp(entry.ssid, ssid)) {
+            DEBUG_WIFI_MULTI(" YES ");
+            if(!passphrase) {
+              return true;
+            } else {
+                if(!strcmp(entry.passphrase, passphrase)) {
+                  DEBUG_WIFI_MULTI("and password match\n");
+                    return true;
+                }
+            }
+        }
+    }
+    DEBUG_WIFI_MULTI("\n");
+    return false;
+}
+
+void PersWiFiManager::APlistClean(void) {
+    for(auto entry : APlist) {
+        if(entry.ssid) {
+            free(entry.ssid);
+        }
+        if(entry.passphrase) {
+            free(entry.passphrase);
+        }
+    }
+    APlist.clear();
 }
