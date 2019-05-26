@@ -40,7 +40,7 @@ String server_b64msg = "ei6NxsBeWk7hj41eia3S0LdkAlm2qxpRbmcsrd23TTc="; // same a
 // Generate IV (once)
 void aes_init() {
   // workaround for incorrect B64 functionality on first run...
-  encrypt((char *) "HELLO WORLD!", aes_iv);
+  encrypt( (char *) "HELLO WORLD!",  aes_iv);
 
   print_key_iv();
 
@@ -54,7 +54,7 @@ void aes_init() {
 String encrypt(char * msg, byte iv[]) {
   int msgLen = strlen(msg);
   char *encrypted = new char [4 * msgLen];
-  aesLib.encrypt64(msg, encrypted, aes_key, iv,128);
+  aesLib.encrypt64(msg, encrypted, aes_key, 128,iv);
   String tmp = String(encrypted);
   delete(encrypted);
   return tmp;
@@ -64,7 +64,7 @@ String decrypt(char * msg, byte iv[]) {
 //  unsigned long ms = micros();
   int msgLen = strlen(msg);
   char *decrypted = new char [msgLen]; // half may be enough
-  aesLib.decrypt64(msg, decrypted, aes_key, iv,128);
+  aesLib.decrypt64(msg, decrypted, aes_key,128, iv);
   String tmp = String(decrypted);
   delete(decrypted);
   return tmp;
@@ -103,7 +103,7 @@ String strTest1 = "";
     Serial.print("input length :");Serial.print(strTest1.length());
     Serial.print(" is encoded : ");Serial.println(i);
     char out[i];
-    int j = base64_encode(out,(char *)strTest1.c_str(),strTest1.length());
+    int j = base64_encode( out,(char *)strTest1.c_str(),strTest1.length());
     if (j==i){
       Serial.print(" ==> [ OK ]");
     }
@@ -353,7 +353,7 @@ void setup() {
         //std::unique_ptr<char[]> buf(new char[size]);
         //configFile.readBytes(buf.get(), size);
         DeserializationError error = deserializeJson(jsonDoc, configFile);//buf.get());
-        Serial.printf("error %s\n", error);
+        Serial.printf("error %s\n", error.c_str());
         configFile.close();
       }
     }
