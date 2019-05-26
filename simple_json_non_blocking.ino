@@ -54,7 +54,7 @@ void aes_init() {
 String encrypt(char * msg, byte iv[]) {
   int msgLen = strlen(msg);
   char *encrypted = new char [4 * msgLen];
-  aesLib.encrypt64(msg, encrypted, aes_key, iv,128);
+  aesLib.encrypt64(msg, encrypted, aes_key, 128,iv);
   String tmp = String(encrypted);
   delete(encrypted);
   return tmp;
@@ -64,7 +64,7 @@ String decrypt(char * msg, byte iv[]) {
 //  unsigned long ms = micros();
   int msgLen = strlen(msg);
   char *decrypted = new char [msgLen]; // half may be enough
-  aesLib.decrypt64(msg, decrypted, aes_key, iv,128);
+  aesLib.decrypt64(msg, decrypted, aes_key, 128,iv);
   String tmp = String(decrypted);
   delete(decrypted);
   return tmp;
@@ -353,7 +353,7 @@ void setup() {
         //std::unique_ptr<char[]> buf(new char[size]);
         //configFile.readBytes(buf.get(), size);
         DeserializationError error = deserializeJson(jsonDoc, configFile);//buf.get());
-        Serial.printf("error %s\n", error);
+        Serial.printf("error %s\n", error.c_str());
         configFile.close();
       }
     }
