@@ -26,14 +26,23 @@ This library and UI was inspired by tzapu's [WiFiManager library](https://github
 ## Info on multiple stored access points
 
 Added event handlers :
-    onDisConnect : is called when loosing a connection. This can be used to store the credentials of the last connection or                  trigger the reconnect to a different AP
-    onStore : is triggered by a succesfull connection to an AP, to store the current credentials in a safe storage. (in the                   demo it use AESLIB to encrypt the credential before storing them in a json file)
+
+    onDisConnect : is called when loosing a connection. This can be used to store the credentials of the last connection or   trigger the reconnect to a different AP
+
+    onStore : is triggered by a succesfull connection to an AP, to store the current credentials in a safe storage. (in the   demo it use AESLIB to encrypt the credential before storing them in a json file)
+
 Added functions:
+
 (similar to the ESP8266 wifiMulti AP handling but async 
  https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/station-examples.html )
  
-  bool addAP(const char* ssid, const char *passphrase = NULL) : adds AP credentials to the AP-list which will be used to try        to connect to
-  bool removeAP(const char* ssid) : removes an AP from the AP-list
-  bool existsAP(const char* ssid, const char *passphrase = NULL) : checks if the AP exists in the AP-list with the same             credentials
-  persWifiAPlist getAPlist() : returns the current list of AP's
-  wl_status_t GetStatus(): returns the status of the current connection.
+ bool addAP(const char* ssid, const char *passphrase = NULL) : adds AP credentials to the AP-list which will be used to try   to connect to
+
+ bool removeAP(const char* ssid) : removes an AP from the AP-list
+
+ bool existsAP(const char* ssid, const char *passphrase = NULL) : checks if the AP exists in the AP-list with the same        credentials
+
+ persWifiAPlist getAPlist() : returns the current list of AP's
+
+ wl_status_t GetStatus(): returns the status of the current connection.
+ 
