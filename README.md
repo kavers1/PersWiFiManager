@@ -32,8 +32,7 @@ Added event handlers :
 
 Added functions:
 
-(similar to the ESP8266 wifiMulti AP handling but async 
- https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/station-examples.html )
+(similar to the ESP8266 [wifiMulti](https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/station-examples.html) AP handling but async )
  
   * bool addAP(const char* ssid, const char *passphrase = NULL) : adds AP credentials to the AP-list which will be used to try to connect to
   * bool removeAP(const char* ssid) : removes an AP from the AP-list
