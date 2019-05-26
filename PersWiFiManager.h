@@ -2,12 +2,19 @@
 #define PERSWIFIMANAGER_H
 
 #include <FS.h>
+#if defined(ESP8266)
 #include <ESP8266WiFi.h>
-#include <Hash.h>
 #include <ESPAsyncTCP.h>       //https://github.com/me-no-dev/ESPAsyncTCP
 #include <ESPAsyncWebServer.h> //https://github.com/me-no-dev/ESPAsyncWebServer
 #include <ESPAsyncDNSServer.h> //https://github.com/devyte/ESPAsyncDNSServer
 //                             //https://github.com/me-no-dev/ESPAsyncUDP
+#elif defined(ESP32)
+#include <WiFi.h>
+#include <WebServer.h>
+#else
+#error "Unknown board class"
+#endif
+#include <Hash.h>
 #include <SPIFFSEditor.h>
 #include <Arduino.h>
 #include <Ticker.h>
@@ -36,8 +43,13 @@ class PersWiFiManager
 
 public:
   typedef std::function<void(void)> WiFiChangeHandlerFunction;
-
+#if defined(ESP8266)
   PersWiFiManager(AsyncWebServer &s, AsyncDNSServer &d, const fs::FS& fs = SPIFFS);
+#elif defined(ESP32)
+/// TODO
+    PersWiFiManager(WebServer& s, DNSServer& d);
+#endif
+
   ~PersWiFiManager();
 
   bool attemptConnection(const String &ssid = "", const String &pass = "");
@@ -46,7 +58,11 @@ public:
 
   bool begin(const String &ssid = "", const String &pass = "");
 
+  void resetSettings();
+
   String getApSsid();
+
+  String getSsid();
 
   void setApCredentials(const String &apSsid, const String &apPass = "");
 
@@ -84,8 +100,14 @@ private:
 
   Ticker _tkWiFiH;
   fs::FS _fs;
+#if defined(ESP8266)
   AsyncWebServer *_aserver;
   AsyncDNSServer *_adnsServer;
+#elif defined(ESP32)
+/// TODO
+  AsyncWebServer *_aserver;
+  AsyncDNSServer *_adnsServer;
+#endif
   String _apSsid, _apPass;
   String _fsUser = "admin", _fsPass = "password";
 
