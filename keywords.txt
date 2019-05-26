@@ -22,6 +22,14 @@ setConnectNonBlock	KEYWORD2
 startApMode	KEYWORD2
 onConnect	KEYWORD2
 onAp	KEYWORD2
+onDisConnect    KEYWORD2
+onStore KEYWORD2
+addAP   KEYWORD2
+removeAP    KEYWORD2
+existsAP    KEYWORD2
+getAPlist   KEYWORD2
+GetStatus   KEYWORD2
+
 
 #######################################
 # Constants (LITERAL1)
